@@ -21,8 +21,7 @@ _LOGGER = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.DEBUG if DEBUG else logging.INFO)
 
 class openvpn2mqtt():
-
-    """Motion Detector"""
+    """OpenVPN status to MQTT"""
     def __init__(self, filename, name="openvpn"):
 
         self.name = name
@@ -108,8 +107,6 @@ class openvpn2mqtt():
                 "availability": availability,
                 "json_attributes_topic":f"{self._topic}/clients/attributes",
                 "state_topic": f"{self._topic}/clients/count",
-                #"value_template": "{{ value_json.confidence*100.0 }}",
-                #"unit_of_measurement": "#",
                 "state_class": "measurement"
             }
             return {"topic": topic, "payload": json.dumps(config)}
@@ -135,7 +132,6 @@ class openvpn2mqtt():
                 "availability": availability,
                 #"json_attributes_topic":f"{self._topic}/{client}/attributes",
                 "state_topic": f"{self._topic}/{client}/{name}",
-                #"value_template": "{{ value_json.confidence*100.0 }}",
                 "unit_of_measurement":  "kB/s",
                 "state_class": "measurement"
             }
@@ -148,15 +144,15 @@ class openvpn2mqtt():
         msgs = [
             #{'topic':f"{self._topic}/title", 'payload': data.get("TITLE") },
             {'topic':f"{self._topic}/clients/count", 'payload': len(clients) if clients else 0 },
-            {'topic':f"{self._topic}/clients/attributes", 'payload':json.dumps(clients) },
+            {'topic':f"{self._topic}/clients/attributes", 'payload':json.dumps({'client_list': clients}) },
             {'topic':f"{self._topic}/status", 'payload': "available" },
             {'topic':f"{self._topic}/timestamp", 'payload': ts },
-            {'topic':f"{self._topic}/routes", 'payload':json.dumps(data.get('ROUTING_TABLE'))}
+            {'topic':f"{self._topic}/routes", 'payload':json.dumps({'routing_table': data.get('ROUTING_TABLE')}) }
         ]
         
         for client in clients:
             name = client['Common Name']
-            if name not in self._clients:
+            if name not in self._clients and name != "UNDEF":
                 _LOGGER.info(f"New client detected: {name}")
                 msgs.append( rate_sensor(name, "rate_down") )
                 msgs.append( rate_sensor(name, "rate_up") )
