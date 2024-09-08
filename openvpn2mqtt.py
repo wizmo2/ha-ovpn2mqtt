@@ -5,7 +5,7 @@ import sys
 from utils import get_config_attr
 import logging
 
-LOGFILE=get_config_attr("LOGFILE", 'openvpn-status.log')
+LOGFILE=get_config_attr("LOGFILE", '/openvpn-status.log')
 NAME=get_config_attr("NAME","openvpn")
 UPDATE_TIME = int(get_config_attr("UPDATE_TIME",300))
 
