@@ -49,10 +49,13 @@ class openvpn2mqtt():
     
     def run(self):
         while True:
-            data = self.parse_file()   
-            self.publish_data(data)
-            self._last = data
-            _LOGGER.debug(data)
+            data = self.parse_file()
+            if data.get("error"):
+                _LOGGER.error(data['error'])
+            else:   
+                _LOGGER.debug(data)
+                self.publish_data(data)
+                self._last = data
             time.sleep(UPDATE_TIME)
 
     def parse_file(self):
