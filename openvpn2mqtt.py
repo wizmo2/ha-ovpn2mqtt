@@ -139,12 +139,14 @@ class openvpn2mqtt():
 
         ts = data['TIME'][1]
         secs = ts - self._last['TIME'][1] if self._last else 0
-        print("time:",secs)
         clients = data.get('CLIENT_LIST')
         msgs = [
             #{'topic':f"{self._topic}/title", 'payload': data.get("TITLE") },
             {'topic':f"{self._topic}/clients/count", 'payload': len(clients) if clients else 0 },
-            {'topic':f"{self._topic}/clients/attributes", 'payload':json.dumps({'client_list': clients}) },
+            {'topic':f"{self._topic}/clients/attributes", 'payload':json.dumps(
+                    { 'info': data.get('TITLE'), 'client_list': clients }
+                ) 
+            },
             {'topic':f"{self._topic}/status", 'payload': "available" },
             {'topic':f"{self._topic}/timestamp", 'payload': ts },
             {'topic':f"{self._topic}/routes", 'payload':json.dumps({'routing_table': data.get('ROUTING_TABLE')}) }
@@ -168,4 +170,5 @@ class openvpn2mqtt():
             self._clients[name] = client
         publish.multiple(msgs, MQTT, MQTT_PORT, auth=mqtt_auth)
 
-openvpn2mqtt(LOGFILE, NAME)
+if __name__ == "__main__":
+    openvpn2mqtt(LOGFILE, NAME)
