@@ -2,7 +2,7 @@
 
 Dockerizable script to monitor OpenVPN server status in Home-Assistant
 
-The script monitors the OpenVPN status log file and published to a MQTT broker and Home-Assistant utilizing MQTT Discovery.
+The script monitors the OpenVPN status log file then publishes to a MQTT broker and Home-Assistant utilizing MQTT Discovery.
 
 ![min-chart](img/min-chart.png)
 
