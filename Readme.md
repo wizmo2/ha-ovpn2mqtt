@@ -28,10 +28,11 @@ sudo docker run -it &1 \
  -v ~/ha-ovpn2mqtt/:/app/ \
  -e OVPN2MQTT_NAME=<sensor name:openvpn> \
  -e OVPN2MQTT_UPDATE_TIME=<refresh seconds:300(5min)> \
- -e OVPN2MQTT_MQTT=<broker host:127.0.0.1> \
+ -e OVPN2MQTT_MQTT_HOST=<broker host:127.0.0.1> \
  -e OVPN2MQTT_MQTT_PORT=<broker port:1883> \
  -e OVPN2MQTT_MQTT_USER=<broker username:> \
  -e OVPN2MQTT_MQTT_PASSWORD=<broker user password:> \
+ -e OVPN2MQTT_DEBUG=<debug loglevel:False> \
    ha-ovpn2mqtt
  ```
 

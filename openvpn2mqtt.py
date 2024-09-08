@@ -52,8 +52,7 @@ class openvpn2mqtt():
             data = self.parse_file()   
             self.publish_data(data)
             self._last = data
-            print(data)
-            print(self._clients)
+            _LOGGER.debug(data)
             time.sleep(UPDATE_TIME)
 
     def parse_file(self):
