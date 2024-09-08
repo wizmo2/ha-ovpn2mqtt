@@ -1,7 +1,9 @@
 import time
 import paho.mqtt.publish as publish
 import json 
+import sys
 from utils import get_config_attr
+import logging
 
 LOGFILE=get_config_attr("LOGFILE", 'openvpn-status.log')
 NAME=get_config_attr("NAME","openvpn")
@@ -12,6 +14,11 @@ MQTT_PORT=get_config_attr("MQTT_PORT",1883) # basic mqtt port
 MQTT_USER=get_config_attr("MQTT_USER","") # None)
 MQTT_PASSWORD=get_config_attr("MQTT_PASSWORD","") 
 mqtt_auth={ "username":MQTT_USER,"password":MQTT_PASSWORD} if MQTT_USER else None # mqtt broker login 
+
+DEBUG=get_config_attr("DEBUG",False)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+_LOGGER = logging.getLogger(__name__)
+_LOGGER.setLevel(logging.DEBUG if DEBUG else logging.INFO)
 
 class openvpn2mqtt():
 
@@ -34,7 +41,9 @@ class openvpn2mqtt():
             "sw_version": "0.1.0"
         }
 
+        _LOGGER.debug(f"Initializing MQTT: {MQTT}:{MQTT_PORT}")
         self.publish_discovery()
+        _LOGGER.debug(f"Starting monitoring '{LOGFILE}' as {NAME}")
         self.run()
 
     
@@ -146,6 +155,7 @@ class openvpn2mqtt():
         for client in clients:
             name = client['Common Name']
             if name not in self._clients:
+                _LOGGER.info(f"New client detected: {name}")
                 msgs.append( rate_sensor(name, "rate_down") )
                 msgs.append( rate_sensor(name, "rate_up") )
             client_topic = f"{self._topic}/{name}"

@@ -4,8 +4,8 @@ Dockerizable script to monitor OpenVPN server status in Home-Assistant
 
 The script monitors the status log file utilizes MQTT Discovery 
 
-# OpenVpn log file
-The default log file is stored in `/etc/openvpn/' server folder
+# Log file
+The default OpenVPN log file is stored in `/etc/openvpn/<server>` folder. _NOTE:  default refresh time is 60s_
 
 You can specify the location within the openvpn configuration file
 ```
@@ -13,19 +13,26 @@ state /var/logs/openvpn-status.log
 ```
 
 # Docker
-
+Build the docker
 ```
-sudo docker build -f ~/ha-ovpn2mqtt/ -t ha-ovpn2mqtt .
-sudo docker run -itd \
- -v /var/log/openvpn-status.log:/openvpn-status.log \ # openvpn log file lovation
- -v ~/ha-ovpn2mqtt/:/app/ \ # debug
- -e OVPN2MQTT_NAME=<sensor name:openvpn> \ 
- -e OVPN2MQTT_UPDATE_TIME=<host:127.0.0.1> \
- -e OVPN2MQTT_MQTT=<brocker host:127.0.0.1> \
- -e OVPN2MQTT_MQTT_PORT=<brocker port:1883> \
- -e OVPN2MQTT_MQTT_USER=<brocker username:> \
+cd ~/ha-ovpn2mqtt
+sudo docker build -t ha-ovpn2mqtt .
+```
+
+Run the docker
+```
+sudo docker run -it &1 \
+ --name ovpn2mqtt \
+ --restart=always \
+ -v /var/log/openvpn-status.log:/openvpn-status.log \
+ -v ~/ha-ovpn2mqtt/:/app/ \
+ -e OVPN2MQTT_NAME=<sensor name:openvpn> \
+ -e OVPN2MQTT_UPDATE_TIME=<refresh seconds:300(5min)> \
+ -e OVPN2MQTT_MQTT=<broker host:127.0.0.1> \
+ -e OVPN2MQTT_MQTT_PORT=<broker port:1883> \
+ -e OVPN2MQTT_MQTT_USER=<broker username:> \
  -e OVPN2MQTT_MQTT_PASSWORD=<broker user password:> \
-   ovpn2mqtt
+   ha-ovpn2mqtt
  ```
 
  > #### TODO:
