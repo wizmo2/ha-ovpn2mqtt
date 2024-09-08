@@ -70,9 +70,9 @@ class openvpn2mqtt():
 
             headers = {}
             for line in lines:
-                ss = line.split(",")
-                key = ss[0].strip("\n")
-                data = [convert(s.strip("\n")) for s in ss[1:]]
+                ss = line.strip("\n").split(",")
+                key = ss[0]
+                data = [convert(s) for s in ss[1:]]
                 if key == "HEADER":
                     headers[data[0]] = data[1:]
                 elif key in headers:
@@ -83,7 +83,7 @@ class openvpn2mqtt():
                         items[item] = data[i] 
                     parsed[key].append(items) 
                 elif key == "END":
-                    continue
+                    break
                 else:
                     parsed[key] = data 
         except Exception as e:

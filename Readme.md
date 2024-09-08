@@ -4,22 +4,35 @@ Dockerizable script to monitor OpenVPN server status in Home-Assistant
 
 The script monitors the OpenVPN status log file and published tp a MQTT broker and Home-Assistant utilizing MQTT Discovery 
 
-## Log file
-The default OpenVPN log file is stored in `/etc/openvpn/<server>` folder. _NOTE:  default refresh time is 60s_
+## Configuration
 
-You can specify the location within the OpenVpn server configuration file
-```
-state /var/logs/openvpn-status.log
-```
-
-## Docker
-The docker file must be run on the OpenVPN server host.  Typically root access is required to view the log file.
-
-Clone this repository
+### Requirements
+- MQTT Broker (for example, use the HA Mosquitto Addon )
+- MQTT enabled in Home-Assistant (Add MQTT integration)
+- You will need to know the location of the OpenVPN state log file. _The default location is `/etc/openvpn/<server>` folder. The location can be chnaged in the OpenVpn server configuration file, for example 'state /var/logs/openvpn-status.log`_
+- 'root' access on the OpenVPN host maybe required to view the log file 
+- Clone this repository
 ```
 cd ~
 git clone https://github.com/wizmo2/ha-ovpn2mqtt.git
 ```
+
+### Options
+The following are available environment options used for both service and docker installs.  
+
+|Parameter|Description|Default|
+|-|-|-|
+|OVPN2MQTT_NAME|sensor name|"openvpn"|
+|OVPN2MQTT_UPDATE_TIME|refresh time in seconds|300|
+|OVPN2MQTT_MQTT_HOST|broker host|"127.0.0.1"|
+|OVPN2MQTT_MQTT_PORT|broker port|1883|
+|OVPN2MQTT_MQTT_USER|broker username|""|
+|OVPN2MQTT_MQTT_PASSWORD|broker user password|""|
+|OVPN2MQTT_DEBUG|debug loglevel|False|
+|OVPN2MQTT_LOGFILE|log file location|"/openvpn-status.log"|
+
+## Docker Install
+Creating a Docker container is the simplest implementation method.  Docker must be installed on the OpenVPN host system.  .
 
 Build the docker
 ```
@@ -36,26 +49,55 @@ sudo docker run -itd \
  -e OVPN2MQTT_MQTT_HOST="192.168.1.1" 
    ha-ovpn2mqtt
  ```
-
-### Options
-The following are available environment options.  
-
-|Parameter|Description|Default|
-|-|-|-|
-|OVPN2MQTT_NAME|sensor name|"openvpn"|
-|OVPN2MQTT_UPDATE_TIME|refresh time in seconds|300|
-|OVPN2MQTT_MQTT_HOST|broker host|"127.0.0.1"|
-|OVPN2MQTT_MQTT_PORT|broker port|1883|
-|OVPN2MQTT_MQTT_USER|broker username|""|
-|OVPN2MQTT_MQTT_PASSWORD|broker user password|""|
-|OVPN2MQTT_DEBUG|debug loglevel|False|
-|OVPN2MQTT_LOGFILE|log file location|"/openvpn-status.log"|
  
 _NOTE: Add `-e <parameter>=<value> \` to docker command._
 
 _NOTE: For debugging add `-v ~/ha-ovpn2mqtt/:/app/'_
  
+## Service Install
+_**Untested**_ 
+Alternatively `openvpn2mqtt.py` can be run as a background service
 
- > #### TODO:
+Install requirements
+```
+cd ~/ha-ovpn2mqtt
+pip install -r requirements.txt
+```
+
+Test the python script. _NOTE:  See options for other configuration parameters_
+```
+OVPN2MQTT_NAME=Server2
+OVPN2MQTT_LOGFILE=/var/log/openvpn/status.log
+OVPN2MQTT_MQTT_HOST=192.168.1.1
+python3 openvpn2mqtt.py
+```
+
+Create a new service file `sudo nano /etc/systemd/system/ovpn2mqtt.service`
+add the following, for example 
+```
+[Unit]
+Description=OpenVPN2MQTT
+After=multi-user.target
+[Service]
+Type=simple
+RestartSec = 30
+Restart=always
+Environment="OVPN2MQTT_NAME=Server2"
+Environment="OVPN2MQTT_LOGFILE=/var/log/openvpn/status.log"
+Environment="OVPN2MQTT_MQTT_HOST=192.168.2.1"
+WorkingDirectory=/home/user/ha-ovpn2mqtt
+ExecStart=/usr/bin/python3 /home/user/ha-ovpn2mqtt/openvpn2mqtt.py
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable and start the service
+```
+sudo systemctl enable ovpn2mqtt
+sudo systemctl start ovpn2mqtt
+```
+
+
+ > ## TODO:
  > - Add telnet management support. _NOTE:  It is possible to retrieve the status log file remotely using telnet, but only one connection session is supported, plus telnet within python is depreciated._
  
