@@ -13,7 +13,13 @@ state /var/logs/openvpn-status.log
 ```
 
 ## Docker
-The docker file must be run on the openvpn server host.  Typically root access is required to view the log file.
+The docker file must be run on the OpenVPN server host.  Typically root access is required to view the log file.
+
+Clone this repository
+```
+cd ~
+git clone https://github.com/wizmo2/ha-ovpn2mqtt.git
+```
 
 Build the docker
 ```
@@ -21,7 +27,7 @@ cd ~/ha-ovpn2mqtt
 sudo docker build -t ha-ovpn2mqtt .
 ```
 
-Run the docker
+Run the docker.  _NOTE:  See options for other configuration parameters_
 ```
 sudo docker run -itd \
  --name ovpn2mqtt \
