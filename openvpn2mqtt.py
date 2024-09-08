@@ -7,10 +7,10 @@ import logging
 
 LOGFILE=get_config_attr("LOGFILE", 'openvpn-status.log')
 NAME=get_config_attr("NAME","openvpn")
-UPDATE_TIME = get_config_attr("UPDATE_TIME",300)
+UPDATE_TIME = int(get_config_attr("UPDATE_TIME",300))
 
 MQTT=get_config_attr("MQTT_HOST","127.0.0.1") # broker address
-MQTT_PORT=get_config_attr("MQTT_PORT",1883) # basic mqtt port
+MQTT_PORT=int(get_config_attr("MQTT_PORT",1883)) # basic mqtt port
 MQTT_USER=get_config_attr("MQTT_USER","") # None)
 MQTT_PASSWORD=get_config_attr("MQTT_PASSWORD","") 
 mqtt_auth={ "username":MQTT_USER,"password":MQTT_PASSWORD} if MQTT_USER else None # mqtt broker login 
