@@ -11,8 +11,8 @@ The script monitors the OpenVPN status log file then publishes to a MQTT broker 
 ### Requirements
 - MQTT Broker (for example, use the HA Mosquitto Addon )
 - MQTT enabled in Home-Assistant (Add MQTT integration)
-- You will need to know the location of the OpenVPN state log file. _The default location is `/etc/openvpn/<server>` folder. The location can be chnaged in the OpenVpn server configuration file, for example 'state /var/logs/openvpn-status.log`_
-- 'root' access on the OpenVPN host maybe required to view the log file 
+- You will need to know the location of the OpenVPN state log file. _The default location is `/etc/openvpn/<server>` folder. The location can be changed in the OpenVPN server configuration file, for example 'state /var/logs/openvpn/status.log`_
+- 'root' access on the OpenVPN host maybe required to view the log file and install
 - Clone this repository
 ```
 cd ~
@@ -42,7 +42,7 @@ cd ~/ha-ovpn2mqtt
 sudo docker build -t ha-ovpn2mqtt .
 ```
 
-Run the docker.  _NOTE:  See options for other configuration parameters_
+Run the docker.  _NOTE:  See [options](#options) for other configuration parameters_
 ```
 sudo docker run -itd \
  --name ovpn2mqtt \
@@ -52,7 +52,7 @@ sudo docker run -itd \
    ha-ovpn2mqtt
  ```
  
-_NOTE: Add `-e <parameter>=<value> \` to docker command._
+_NOTE: Add `-e <parameter>=<value> \` to docker command as needed_
 
 _NOTE: For debugging add `-v ~/ha-ovpn2mqtt/:/app/'_
  
@@ -66,7 +66,7 @@ cd ~/ha-ovpn2mqtt
 pip install -r requirements.txt
 ```
 
-Test the python script. _NOTE:  See options for other configuration parameters_
+Test the python script. _NOTE:  See  [options](#options)  for other configuration parameters_
 ```
 OVPN2MQTT_NAME=Server2
 OVPN2MQTT_LOGFILE=/var/log/openvpn/status.log
@@ -99,12 +99,13 @@ sudo systemctl enable ovpn2mqtt
 sudo systemctl start ovpn2mqtt
 ```
 ## Sensors
-When correctly configured, An OpenVPN device should be created with a Clients sensor.  The Client sensor shows the number of active connections.  The sensor attributes include additional information on the server and clients.  These can be referenced within HA as needed.
+When correctly configured, An 'OpenVPN' device should be created with a 'Clients' sensor.  The 'Clients' sensor shows the number of active connections.  The sensor attributes include additional server information and all client data.
 
-A 'Rate-up' and 'Rate-down' sensor is created for each detected client.  
+A 'Rate up' and 'Rate down' sensor is created for each detected client.  
 
 
 
  > ## TODO:
  > - Add telnet management support. _NOTE:  It is possible to retrieve the status log file remotely using telnet, but only one connection session is supported, plus telnet within python is depreciated._
+ > - Correctly handle multiple connections using the same name
  
