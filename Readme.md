@@ -2,7 +2,9 @@
 
 Dockerizable script to monitor OpenVPN server status in Home-Assistant
 
-The script monitors the OpenVPN status log file and published tp a MQTT broker and Home-Assistant utilizing MQTT Discovery 
+The script monitors the OpenVPN status log file and published to a MQTT broker and Home-Assistant utilizing MQTT Discovery.
+
+![min-chart](img/min-chart.png)
 
 ## Configuration
 
@@ -96,6 +98,11 @@ Enable and start the service
 sudo systemctl enable ovpn2mqtt
 sudo systemctl start ovpn2mqtt
 ```
+## Sensors
+When correctly configured, An OpenVPN device should be created with a Clients sensor.  The Client sensor shows the number of active connections.  The sensor attributes include additional information on the server and clients.  These can be referenced within HA as needed.
+
+A 'Rate-up' and 'Rate-down' sensor is created for each detected client.  
+
 
 
  > ## TODO:
