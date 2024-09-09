@@ -99,13 +99,14 @@ sudo systemctl enable ovpn2mqtt
 sudo systemctl start ovpn2mqtt
 ```
 ## Sensors
-When correctly configured, An 'OpenVPN' device should be created with a 'Clients' sensor.  The 'Clients' sensor shows the number of active connections.  The sensor attributes include additional server information and all client data.
+When correctly configured, an 'OpenVPN' MQTT device should be created with a 'Clients' sensor.  The 'Clients' sensor shows the number of active connections.  The sensor attributes include additional server information and all client data.
 
 A 'Rate up' and 'Rate down' sensor is created for each detected client.  
 
 
 
- > ## TODO:
- > - Add telnet management support. _NOTE:  It is possible to retrieve the status log file remotely using telnet, but only one connection session is supported, plus telnet within python is depreciated._
- > - Correctly handle multiple connections using the same name
+> ## TODO:
+> - Add telnet management support. _NOTE:  It is possible to retrieve the status log file remotely using telnet, but only one connection session is supported, plus telnet within python is depreciated._
+> - Correctly handle multiple connections using the same name
+> - Community testing, feedback, and PRs welcome! 
  
