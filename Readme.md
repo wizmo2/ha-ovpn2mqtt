@@ -108,4 +108,4 @@ A 'Rate up' and 'Rate down' sensor is created for each detected client.
 > - Add telnet management support. _NOTE:  It is possible to retrieve the status log file remotely using telnet, but only one connection session is supported, plus telnet within python is depreciated._
 > - Correctly handle multiple connections using the same name
 > - Community testing, feedback, and PRs welcome! 
-> - Function to remove redundant cliemnt sensor.  _NOTE: Currently you need something like [MQTT Explorer](https://mqtt-explorer.com) to delete the `homeassistant/sensor/openvpn/<client>` config topic_ 
+> - Function to remove redundant client sensor.  _NOTE: Currently you need something like [MQTT Explorer](https://mqtt-explorer.com) to delete the `homeassistant/sensor/` config topic_ 
