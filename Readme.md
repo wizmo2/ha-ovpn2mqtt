@@ -2,7 +2,7 @@
 
 OpenVPN is routinely used to securely access private Home-Assistant implementations, but there is no integration to monitor traffic within HA.  So Here's How you can, relatively simply with this dockerizable python script.
 
-The script monitors the OpenVPN status log file then publishes to a MQTT broker and Home-Assistant utilizing MQTT Discovery.
+The script monitors the OpenVPN status log file then publishes to a MQTT broker and automatically creates [sensors](#sensors) in Home-Assistant utilizing MQTT Discovery.
 
 ![min-chart](img/min-chart.png)
 
