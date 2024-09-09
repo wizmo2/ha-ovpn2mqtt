@@ -54,7 +54,7 @@ sudo docker run -itd \
  
 _NOTE: Add `-e <parameter>=<value> \` to docker command as needed_
 
-_NOTE: For debugging add `-v ~/ha-ovpn2mqtt/:/app/'_
+For debugging add `-v ~/ha-ovpn2mqtt/:/app/ \`
  
 ## Service Install
 _**Untested**_ 
