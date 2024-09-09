@@ -136,6 +136,9 @@ class openvpn2mqtt():
                 "state_class": "measurement"
             }
             return {"topic": topic, "payload": json.dumps(config)}
+        
+        def diffr(x,y):
+            return x-y if x>=y else x
 
         ts = data['TIME'][1]
         secs = ts - self._last['TIME'][1] if self._last else 0
@@ -163,8 +166,8 @@ class openvpn2mqtt():
             msgs.append({'topic':f"{client_topic}/connected", 'payload':client.get('Connected Since')})
             msgs.append({'topic':f"{client_topic}/attributes", 'payload':json.dumps(client)})
             if client_last and secs: 
-                bps_in = (client['Bytes Received'] - client_last['Bytes Received']) / secs
-                bps_out = (client['Bytes Sent'] - client_last['Bytes Sent']) / secs
+                bps_in = diffr(client['Bytes Received'], client_last['Bytes Received']) / secs
+                bps_out = diffr(client['Bytes Sent'], client_last['Bytes Sent']) / secs
                 msgs.append({'topic':f"{client_topic}/rate_down", 'payload': round(bps_in/1024,3)})
                 msgs.append({'topic':f"{client_topic}/rate_up", 'payload': round(bps_out/1024,3)})
             self._clients[name] = client
