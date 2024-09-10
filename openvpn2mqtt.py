@@ -109,7 +109,7 @@ class openvpn2mqtt():
                 "state_topic": f"{self._topic}/clients/count",
                 "state_class": "measurement"
             }
-            return {"topic": topic, "payload": json.dumps(config)}
+            return {"topic": topic, "payload": json.dumps(config), "retain": True}
 
         msgs=[]
         # server sensor
@@ -135,7 +135,7 @@ class openvpn2mqtt():
                 "unit_of_measurement":  "kB/s",
                 "state_class": "measurement"
             }
-            return {"topic": topic, "payload": json.dumps(config)}
+            return {"topic": topic, "payload": json.dumps(config), 'retain': True}
         
         def diffr(x,y):
             return x-y if x>=y else x
