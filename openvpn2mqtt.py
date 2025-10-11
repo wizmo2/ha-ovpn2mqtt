@@ -142,10 +142,10 @@ class openvpn2mqtt():
 
         ts = data['TIME'][1]
         secs = ts - self._last['TIME'][1] if self._last else 0
-        clients = data.get('CLIENT_LIST')
+        clients = data.get('CLIENT_LIST', [])
         msgs = [
             #{'topic':f"{self._topic}/title", 'payload': data.get("TITLE") },
-            {'topic':f"{self._topic}/clients/count", 'payload': len(clients) if clients else 0 },
+            {'topic':f"{self._topic}/clients/count", 'payload': len(clients)},
             {'topic':f"{self._topic}/clients/attributes", 'payload':json.dumps(
                     { 'info': data.get('TITLE'), 'client_list': clients }
                 ) 
